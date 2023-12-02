@@ -133,8 +133,6 @@ func handleServe(c *fiber.Ctx) error {
 		}
 	}
 
-	// patientNext := patients[cui]
-
 	go sendQueueMessage(patientNext, true)
 
 	return c.JSON(patientNext)
@@ -145,6 +143,10 @@ func handleList(c *fiber.Ctx) error {
 }
 
 func sendQueueMessage(user Patient, next bool) error {
+	if user.Phone == "" {
+		return nil
+	}
+
 	var message string
 	if next {
 		message = fmt.Sprintf("Hello %s, it's your turn to be served. Your reference number is %v", user.Username, user.Reference)
