@@ -121,11 +121,19 @@ func handleServe(c *fiber.Ctx) error {
 
 	patients[cui].Served = true
 
-	if len(patients) > cui {
-		return c.SendStatus(fiber.StatusAccepted)
+	// if len(patients) > cui {
+	// 	return c.SendStatus(fiber.StatusAccepted)
+	// }
+
+	var patientNext Patient
+
+	for _, v := range patients {
+		if !v.Served {
+			patientNext = v
+		}
 	}
 
-	patientNext := patients[cui]
+	// patientNext := patients[cui]
 
 	go sendQueueMessage(patientNext, true)
 
