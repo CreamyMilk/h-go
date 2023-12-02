@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"hosigo/notifiers"
-	"hosigo/utils"
 	"os"
 	"strconv"
 
@@ -26,7 +25,7 @@ const defaultPort = "8081"
 var patients []Patient
 
 func main() {
-	utils.LoadEnvironmentVariables()
+	// utils.LoadEnvironmentVariables()
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -149,7 +148,10 @@ func sendQueueMessage(user Patient, next bool) error {
 	// Replace with your SMS sending code
 	err := notifiers.SendSms(message, user.Phone, notifiers.RecipientAlert)
 	if err != nil {
+		log.Print("Errrr 🪽", err.Error())
 		return fmt.Errorf("❌ issue with message sending: %s", err.Error())
 	}
+	log.Print("Sent 🪽")
+
 	return nil
 }

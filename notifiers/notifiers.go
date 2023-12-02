@@ -6,11 +6,8 @@ import (
 	"io"
 
 	b64 "encoding/base64"
-	"github.com/rs/zerolog/log"
-	"hosigo/utils"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 )
 
@@ -33,15 +30,15 @@ func toBasicBase64AuthValue(username, password string) string {
 //	TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN (required)
 
 func SendSms(message, phoneNumber string, smsType SmsType) error {
-	if !utils.CheckEnvInclusion("TWILIO_ACCOUNT_SID", "TWILIO_NUMBER_SID", "TWILIO_AUTH_TOKEN", "TWILIO_PHONE_NUMBER") {
-		log.Printf("Issue with Twilio Envs was to send %s to (%s) \n", message, phoneNumber)
-		return fmt.Errorf("invalid OTP request. Contact Abacus support")
-	}
+	// if !utils.CheckEnvInclusion("TWILIO_ACCOUNT_SID", "TWILIO_NUMBER_SID", "TWILIO_AUTH_TOKEN", "TWILIO_PHONE_NUMBER") {
+	// 	log.Printf("Issue with Twilio Envs was to send %s to (%s) \n", message, phoneNumber)
+	// 	return fmt.Errorf("invalid OTP request. Contact Abacus support")
+	// }
 
-	baseUrl := utils.UseEnvOrDefault("TWILIO_BASE_URL", "https://api.twilio.com/2010-04-01")
-	endpoint := fmt.Sprintf("%s/Accounts/%s/Messages.json", baseUrl, os.Getenv("TWILIO_ACCOUNT_SID"))
+	// baseUrl := utils.UseEnvOrDefault("TWILIO_BASE_URL", "https://api.twilio.com/2010-04-01")
+	endpoint := "https://api.twilio.com/2010-04-01/Accounts/AC552757592eddf6ba766b2f8ad74bd287/Messages.json"
 
-	senderNumber := utils.UseEnvOrDefault("TWILIO_PHONE_NUMBER", "+18775657133")
+	senderNumber := "+18084273356"
 
 	data := url.Values{}
 	data.Set("Body", message)
@@ -55,7 +52,7 @@ func SendSms(message, phoneNumber string, smsType SmsType) error {
 
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Add("Authorization", toBasicBase64AuthValue(os.Getenv("TWILIO_NUMBER_SID"), os.Getenv("TWILIO_AUTH_TOKEN")))
+	req.Header.Add("Authorization", toBasicBase64AuthValue("AC552757592eddf6ba766b2f8ad74bd287", "51fa78caec2813be961e606eaf8144b3"))
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
