@@ -40,6 +40,7 @@ func main() {
 	app.Post("/registerUser", handleRegister)
 	app.Post("/serveUser", handleServe)
 	app.Get("/listUsers", handleList)
+	app.Get("/latest", handleLatest)
 
 	app.Use(func(c *fiber.Ctx) error {
 		return c.Status(418).JSON(&fiber.Map{
@@ -140,6 +141,18 @@ func handleServe(c *fiber.Ctx) error {
 
 func handleList(c *fiber.Ctx) error {
 	return c.JSON(patients)
+}
+
+func handleLatest(c *fiber.Ctx) error {
+	var patientNext Patient
+
+	for _, v := range patients {
+		if !v.Served {
+			patientNext = v
+		}
+	}
+
+	return c.JSON(patientNext)
 }
 
 func sendQueueMessage(user Patient, next bool) error {
